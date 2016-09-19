@@ -1,5 +1,6 @@
 enableDestroy       = require 'server-destroy'
 octobluExpress      = require 'express-octoblu'
+basicauth           = require 'basicauth-middleware'
 Router              = require './router'
 ServiceStateService = require './services/service-state-service'
 debug               = require('debug')('service-state-service:server')
@@ -16,6 +17,7 @@ class Server
   run: (callback) =>
     app = octobluExpress({ @logFn, @disableLogging })
 
+    app.use basicauth @username, @password
     serviceStateService = new ServiceStateService { @etcdUri }
     router = new Router {serviceStateService}
 
