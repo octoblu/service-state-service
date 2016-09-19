@@ -2,10 +2,23 @@ class ServiceStateController
   constructor: ({@serviceStateService}) ->
     throw new Error 'Missing serviceStateService' unless @serviceStateService?
 
-  hello: (request, response) =>
-    {hasError} = request.query
-    @serviceStateService.doHello {hasError}, (error) =>
+  getKey: (request, response) =>
+    { namespace, service, key } = request.params
+    return response.sendStatus(422) unless key == 'docker_url'
+
+    @serviceStateService.getKey { namespace, service, key }, (error, value) =>
       return response.sendError(error) if error?
-      response.sendStatus(200)
+      return response.sendStatus(404) unless value?
+      response.status(200).send value
+
+  setKey: (request, response) =>
+    { namespace, service, key } = request.params
+    { docker_url } = request.body
+    return response.sendStatus(422) unless key == 'docker_url'
+    return response.sendStatus(422) unless docker_url?
+
+    @serviceStateService.setKey { namespace, service, key, value: docker_url }, (error, value) =>
+      return response.sendError(error) if error?
+      response.sendStatus(204)
 
 module.exports = ServiceStateController

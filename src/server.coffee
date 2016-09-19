@@ -1,13 +1,14 @@
-enableDestroy      = require 'server-destroy'
-octobluExpress     = require 'express-octoblu'
-MeshbluAuth        = require 'express-meshblu-auth'
-Router             = require './router'
+enableDestroy       = require 'server-destroy'
+octobluExpress      = require 'express-octoblu'
+Router              = require './router'
 ServiceStateService = require './services/service-state-service'
-debug              = require('debug')('service-state-service:server')
+debug               = require('debug')('service-state-service:server')
 
 class Server
-  constructor: ({@logFn, @disableLogging, @port, @meshbluConfig})->
-    throw new Error 'Missing meshbluConfig' unless @meshbluConfig?
+  constructor: ({@logFn,@disableLogging,@port,@username,@password,@etcdUri})->
+    throw new Error 'Missing username' unless @username?
+    throw new Error 'Missing password' unless @password?
+    throw new Error 'Missing etcdUri' unless @etcdUri?
 
   address: =>
     @server.address()
@@ -15,12 +16,8 @@ class Server
   run: (callback) =>
     app = octobluExpress({ @logFn, @disableLogging })
 
-    meshbluAuth = new MeshbluAuth @meshbluConfig
-    app.use meshbluAuth.auth()
-    app.use meshbluAuth.gateway()
-
-    serviceStateService = new ServiceStateService
-    router = new Router {@meshbluConfig, serviceStateService}
+    serviceStateService = new ServiceStateService { @etcdUri }
+    router = new Router {serviceStateService}
 
     router.route app
 

@@ -7,7 +7,7 @@ class Router
   route: (app) =>
     serviceStateController = new ServiceStateController {@serviceStateService}
 
-    app.get '/hello', serviceStateController.hello
-    # e.g. app.put '/resource/:id', someController.update
+    app.get '/:namespace/:service/:key', serviceStateController.getKey
+    app.put '/:namespace/:service/:key', serviceStateController.setKey
 
 module.exports = Router

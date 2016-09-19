@@ -1,13 +1,14 @@
 _             = require 'lodash'
-MeshbluConfig = require 'meshblu-config'
 Server        = require './src/server'
 
 class Command
   constructor: ->
     @serverOptions = {
-      meshbluConfig:  new MeshbluConfig().toJSON()
       port:           process.env.PORT || 80
       disableLogging: process.env.DISABLE_LOGGING == "true"
+      username:       process.env.USERNAME
+      password:       process.env.PASSWORD
+      etcdUri:        process.env.ETCD_URI
     }
 
   panic: (error) =>
@@ -15,9 +16,9 @@ class Command
     process.exit 1
 
   run: =>
-    # Use this to require env
-    # @panic new Error('Missing required environment variable: ENV_NAME') if _.isEmpty @serverOptions.envName
-    @panic new Error('Missing meshbluConfig') if _.isEmpty @serverOptions.meshbluConfig
+    @panic new Error('Missing ETCD_URI') if _.isEmpty @serverOptions.etcdUri
+    @panic new Error('Missing USERNAME') if _.isEmpty @serverOptions.username
+    @panic new Error('Missing PASSWORD') if _.isEmpty @serverOptions.password
 
     server = new Server @serverOptions
     server.run (error) =>
