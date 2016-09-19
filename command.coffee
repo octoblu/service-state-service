@@ -1,5 +1,6 @@
-_             = require 'lodash'
-Server        = require './src/server'
+_              = require 'lodash'
+Server         = require './src/server'
+SigtermHandler = require 'sigterm-handler'
 
 class Command
   constructor: ->
@@ -27,11 +28,8 @@ class Command
       {address,port} = server.address()
       console.log "ServiceStateService listening on port: #{port}"
 
-    process.on 'SIGTERM', =>
-      console.log 'SIGTERM caught, exiting'
-      return process.exit 0 unless server?.stop?
-      server.stop =>
-        process.exit 0
+    sigtermHandler = new SigtermHandler()
+    sigtermHandler.register server.stop
 
 command = new Command()
 command.run()
