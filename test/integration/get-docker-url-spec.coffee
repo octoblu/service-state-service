@@ -55,3 +55,6 @@ describe 'Get Docker URL', ->
 
   it 'should return a docker_url', ->
     expect(@body).to.equal 'quay.io/octoblu/awesome-service:v1'
+
+  it 'should call getKey', ->
+    @getKey.done()

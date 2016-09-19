@@ -8,6 +8,7 @@ class Router
     serviceStateController = new ServiceStateController {@serviceStateService}
 
     app.get '/:namespace/:service/:key', serviceStateController.getKey
+    app.put '/:namespace/:service/restart', serviceStateController.restart
     app.put '/:namespace/:service/:key', serviceStateController.setKey
 
 module.exports = Router

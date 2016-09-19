@@ -3,7 +3,7 @@ request       = require 'request'
 enableDestroy = require 'server-destroy'
 Server        = require '../../src/server'
 
-describe 'Set Docker URL', ->
+describe 'Restart', ->
   beforeEach (done) ->
     @etcdServer = shmock 0xbabe
     enableDestroy @etcdServer
@@ -29,17 +29,16 @@ describe 'Set Docker URL', ->
 
   beforeEach (done) ->
     @setKey = @etcdServer
-      .put '/v2/keys/octoblu/awesome-service/docker_url'
+      .put '/v2/keys/octoblu/awesome-service/restart'
       .reply 204
 
     options =
-      uri: '/octoblu/awesome-service/docker_url'
+      uri: '/octoblu/awesome-service/restart'
       baseUrl: "http://localhost:#{@serverPort}"
       auth:
         username: 'tester'
         password: 'iamatester'
-      json:
-        docker_url: 'quay.io/octoblu/awesome-service:v2'
+      json: true
 
     request.put options, (error, @response, @body) =>
       done error
@@ -47,6 +46,6 @@ describe 'Set Docker URL', ->
   it 'should return a 204', ->
     expect(@response.statusCode).to.equal 204
 
-  it 'should call setKey', ->
+  it 'should call set key', ->
     @setKey.done()
 

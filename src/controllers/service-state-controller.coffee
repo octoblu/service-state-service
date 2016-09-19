@@ -17,7 +17,16 @@ class ServiceStateController
     return response.sendStatus(422) unless key == 'docker_url'
     return response.sendStatus(422) unless docker_url?
 
-    @serviceStateService.setKey { namespace, service, key, value: docker_url }, (error, value) =>
+    value = docker_url
+    @serviceStateService.setKey { namespace, service, key, value }, (error) =>
+      return response.sendError(error) if error?
+      response.sendStatus(204)
+
+  restart: (request, response) =>
+    { namespace, service } = request.params
+    key = 'restart'
+    value = new Date().toString()
+    @serviceStateService.setKey { namespace, service, key, value }, (error) =>
       return response.sendError(error) if error?
       response.sendStatus(204)
 
