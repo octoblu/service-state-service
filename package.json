@@ -1,6 +1,6 @@
 {
   "name": "service-state-service",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "service-state-service an Octoblu Service",
   "keywords": [
     "Octoblu",
@@ -30,7 +30,6 @@
     "mocha-multi": "^0.9.1",
     "mocha-osx-reporter": "^0.1.2",
     "nyc": "^8.3.0",
-    "request": "^2.74.0",
     "shmock": "^0.8.1",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0"
@@ -41,7 +40,7 @@
     "debug": "^2.2.0",
     "express-octoblu": "^1.1.1",
     "lodash": "^4.15.0",
-    "node-etcd": "^5.0.3",
+    "request": "^2.74.0",
     "server-destroy": "^1.0.1",
     "sigterm-handler": "^1.0.2"
   },
